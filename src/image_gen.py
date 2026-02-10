@@ -3,7 +3,7 @@ import os
 
 TEMPLATE_PATH = "assets/template.png"
 OUTPUT_DIR = "output"
-FONT_PATH = "arial.ttf"  # Windows default
+FONT_PATH = "assets/font.ttf"  # Local font file
 
 def generate_card(lesson_data, professor_name, has_breakfast):
     """
@@ -36,13 +36,20 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         # Assuming layout based on typical EBD cards
         
         # 1. Lesson Number
-        # DEBUG: Force default font to rule out path issues
-        print("DEBUG: Using default PIL font.")
-        font_lesson = ImageFont.load_default()
-        font_theme = ImageFont.load_default()
-        font_hymns = ImageFont.load_default()
-        font_prof = ImageFont.load_default()
-        font_break = ImageFont.load_default()
+        # Font Loading Logic
+        try:
+            font_lesson = ImageFont.truetype(FONT_PATH, 40)
+            font_theme = ImageFont.truetype(FONT_PATH, 30)
+            font_hymns = ImageFont.truetype(FONT_PATH, 40)
+            font_prof = ImageFont.truetype(FONT_PATH, 120)
+            font_break = ImageFont.truetype(FONT_PATH, 30)
+        except IOError:
+            print(f"Warning: Font not found at {FONT_PATH}. Using default.")
+            font_lesson = ImageFont.load_default()
+            font_theme = ImageFont.load_default()
+            font_hymns = ImageFont.load_default()
+            font_prof = ImageFont.load_default()
+            font_break = ImageFont.load_default()
         # Position: Let's assume top right or top center. 
         # User said: "numero da lição... tema... hinos... professor... café"
         # I will print "Lição X" 
@@ -53,7 +60,7 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         draw.text((W - length_lesson - 40, 90), lesson_text, font=font_lesson, fill=TEXT_COLOR)
         
         # 2. Theme (Central, Big)
-        font_theme = ImageFont.load_default()
+        # font_theme is already loaded above
         theme_text = lesson_data['theme']
         # Wrap text if too long
         lines = []
@@ -78,14 +85,14 @@ def generate_card(lesson_data, professor_name, has_breakfast):
             
         # 3. Hymns (Below Theme)
         y_hymns = y_text + 50
-        font_hymns = ImageFont.load_default()
+        # font_hymns is already loaded above
         hymns_text = f"Hinos Sugeridos: {lesson_data['hymns']}"
         length_hymns = draw.textlength(hymns_text, font=font_hymns)
         draw.text(((W - length_hymns)/2, y_hymns), hymns_text, font=font_hymns, fill=TEXT_COLOR)
         
         # 4. Professor (Bottom)
         y_prof = H * 0.60
-        font_prof = ImageFont.load_default()
+        # font_prof is already loaded above
         prof_text = f"{professor_name}"
         length_prof = draw.textlength(prof_text, font=font_prof)
         draw.text(((W - length_prof)/2, y_prof), prof_text, font=font_prof, fill=TEXT_COLOR)
@@ -99,7 +106,7 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         
         if has_breakfast:
             y_break = H * 0.85
-            font_break = ImageFont.load_default()
+            # font_break is already loaded above
             break_text = "Café da manhã às 8:30h"
             length_break = draw.textlength(break_text, font=font_break)
             draw.text(((W - length_break)/2, y_break), break_text, font=font_break, fill=TEXT_COLOR)
