@@ -1,9 +1,10 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-TEMPLATE_PATH = "assets/template.png"
-OUTPUT_DIR = "output"
-FONT_PATH = "assets/font.ttf"  # Local font file
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_PATH = os.path.join(BASE_DIR, "assets", "template.png")
+OUTPUT_DIR = os.path.join(BASE_DIR, "output")
+FONT_PATH = os.path.join(BASE_DIR, "assets", "font.ttf")
 
 def generate_card(lesson_data, professor_name, has_breakfast):
     """
@@ -12,9 +13,10 @@ def generate_card(lesson_data, professor_name, has_breakfast):
     professor_name: str
     has_breakfast: bool
     """
+    print(f"DEBUG: Looking for template at {TEMPLATE_PATH}")
     if not os.path.exists(TEMPLATE_PATH):
         print(f"Error: Template not found at {TEMPLATE_PATH}")
-        return False
+        return f"Template not found at {TEMPLATE_PATH}"
 
     try:
         img = Image.open(TEMPLATE_PATH)
@@ -25,25 +27,23 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         
         # Colors
         TEXT_COLOR = (255, 255, 255) # White
-        TEXT_COLOR_BLUE = (0, 50, 100)   # Dark Blue for Theme Box (if we were drawing it, but we assume it's part of the bg or we just draw text)
-        THEME_COLOR = (0, 50, 100)   # Dark Blue for Theme Box (if we were drawing it, but we assume it's part of the bg or we just draw text)
-        # Actually the user sent a "clean" image, so we just draw text over it.
+        TEXT_COLOR_BLUE = (0, 50, 100)   # Dark Blue
         
         # --- CONFIGURATION (Adjust these coordinates) ---
-        # Lesson Number (Top Right usually, or near title)
-        # Assuming layout based on typical EBD cards
         
         # --- FONT CONFIGURATION ---
+        print(f"DEBUG: Loading font from {FONT_PATH}")
         try:
             # Drastically increasing sizes based on user feedback
-            font_lesson = ImageFont.truetype(FONT_PATH, 60)   # Was 40
-            font_theme = ImageFont.truetype(FONT_PATH, 55)    # Was 30/35
-            font_hymns = ImageFont.truetype(FONT_PATH, 50)    # Was 40
-            font_prof = ImageFont.truetype(FONT_PATH, 160)    # Was 120
-            font_break = ImageFont.truetype(FONT_PATH, 50)    # Was 30/35
+            font_lesson = ImageFont.truetype(FONT_PATH, 60)
+            font_theme = ImageFont.truetype(FONT_PATH, 55)
+            font_hymns = ImageFont.truetype(FONT_PATH, 50)
+            font_prof = ImageFont.truetype(FONT_PATH, 160)
+            font_break = ImageFont.truetype(FONT_PATH, 50)
         except Exception as e:
             print(f"CRITICAL ERROR loading font {FONT_PATH}: {e}")
-            # Fallback to default if custom font fails entirely
+            print("Falling back to default font (will be small).")
+            # Fallback
             font_lesson = ImageFont.load_default()
             font_theme = ImageFont.load_default()
             font_hymns = ImageFont.load_default()
@@ -51,24 +51,18 @@ def generate_card(lesson_data, professor_name, has_breakfast):
             font_break = ImageFont.load_default()
 
         # 1. Lesson Number
-        # Position: Let's assume top right or top center. 
-        # User said: "numero da lição... tema... hinos... professor... café"
-        # I will print "Lição X" 
         lesson_number = str(lesson_data['lesson_number']).zfill(2)
         lesson_text = f"Lição {lesson_number}"
-        # Position: Top Right
         length_lesson = draw.textlength(lesson_text, font=font_lesson)
         draw.text((W - length_lesson - 40, 90), lesson_text, font=font_lesson, fill=TEXT_COLOR)
         
         # 2. Theme (Central, Big)
         theme_text = lesson_data['theme']
-        # Wrap text if too long
         lines = []
         words = theme_text.split()
         current_line = []
         for word in words:
             current_line.append(word)
-            # test width
             w_test = draw.textlength(" ".join(current_line), font=font_theme)
             if w_test > W * 0.8: # 80% of width
                 current_line.pop()
@@ -76,12 +70,12 @@ def generate_card(lesson_data, professor_name, has_breakfast):
                 current_line = [word]
         lines.append(" ".join(current_line))
         
-        y_text = H * 0.34 # Start at 34% height
+        y_text = H * 0.34
         for line in lines:
             length = draw.textlength(line, font=font_theme)
             x_text = (W - length) / 2
             draw.text((x_text, y_text), line, font=font_theme, fill=TEXT_COLOR_BLUE)
-            y_text += 85 # Line height increased due to larger font
+            y_text += 85
             
         # 3. Hymns (Below Theme)
         y_hymns = y_text + 60
@@ -114,7 +108,7 @@ def generate_card(lesson_data, professor_name, has_breakfast):
 
     except Exception as e:
         print(f"Error generating image: {e}")
-        return False
+        return str(e)
 
 if __name__ == "__main__":
     # Test data
