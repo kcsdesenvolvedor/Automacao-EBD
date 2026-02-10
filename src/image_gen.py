@@ -35,7 +35,7 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         print(f"DEBUG: Loading font from {FONT_PATH}")
         try:
             # Drastically increasing sizes based on user feedback
-            font_lesson = ImageFont.truetype(FONT_PATH, 140)
+            font_lesson = ImageFont.truetype(FONT_PATH, 40)
             font_theme = ImageFont.truetype(FONT_PATH, 30)
             font_hymns = ImageFont.truetype(FONT_PATH, 40)
             font_prof = ImageFont.truetype(FONT_PATH, 160)
