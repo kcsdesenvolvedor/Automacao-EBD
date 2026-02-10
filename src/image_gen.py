@@ -53,7 +53,7 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         draw.text((W - length_lesson - 40, 90), lesson_text, font=font_lesson, fill=TEXT_COLOR)
         
         # 2. Theme (Central, Big)
-        font_theme = ImageFont.truetype(FONT_PATH, 30)
+        font_theme = ImageFont.load_default()
         theme_text = lesson_data['theme']
         # Wrap text if too long
         lines = []
@@ -78,14 +78,14 @@ def generate_card(lesson_data, professor_name, has_breakfast):
             
         # 3. Hymns (Below Theme)
         y_hymns = y_text + 50
-        font_hymns = ImageFont.truetype(FONT_PATH, 40)
+        font_hymns = ImageFont.load_default()
         hymns_text = f"Hinos Sugeridos: {lesson_data['hymns']}"
         length_hymns = draw.textlength(hymns_text, font=font_hymns)
         draw.text(((W - length_hymns)/2, y_hymns), hymns_text, font=font_hymns, fill=TEXT_COLOR)
         
         # 4. Professor (Bottom)
         y_prof = H * 0.60
-        font_prof = ImageFont.truetype(FONT_PATH, 120)
+        font_prof = ImageFont.load_default()
         prof_text = f"{professor_name}"
         length_prof = draw.textlength(prof_text, font=font_prof)
         draw.text(((W - length_prof)/2, y_prof), prof_text, font=font_prof, fill=TEXT_COLOR)
@@ -99,7 +99,7 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         
         if has_breakfast:
             y_break = H * 0.85
-            font_break = ImageFont.truetype(FONT_PATH, 30)
+            font_break = ImageFont.load_default()
             break_text = "Café da manhã às 8:30h"
             length_break = draw.textlength(break_text, font=font_break)
             draw.text(((W - length_break)/2, y_break), break_text, font=font_break, fill=TEXT_COLOR)
