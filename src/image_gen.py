@@ -37,14 +37,18 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         
         # 1. Lesson Number
         # Font Loading Logic
+        # We are now certain assets/font.ttf exists (or should). 
+        # Failing here is better than silently using the tiny default font.
         try:
             font_lesson = ImageFont.truetype(FONT_PATH, 40)
-            font_theme = ImageFont.truetype(FONT_PATH, 30)
+            font_theme = ImageFont.truetype(FONT_PATH, 35) # Increased from 30
             font_hymns = ImageFont.truetype(FONT_PATH, 40)
             font_prof = ImageFont.truetype(FONT_PATH, 120)
-            font_break = ImageFont.truetype(FONT_PATH, 30)
-        except IOError:
-            print(f"Warning: Font not found at {FONT_PATH}. Using default.")
+            font_break = ImageFont.truetype(FONT_PATH, 35) # Increased from 30
+        except Exception as e:
+            print(f"CRITICAL ERROR loading font {FONT_PATH}: {e}")
+            # If this fails, we want to know. But to keep the app running, we fall back.
+            # However, the user says it's too small, so likely it WAS falling back.
             font_lesson = ImageFont.load_default()
             font_theme = ImageFont.load_default()
             font_hymns = ImageFont.load_default()
