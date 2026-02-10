@@ -14,7 +14,9 @@ def generate_card(lesson_data, professor_name, has_breakfast):
     """
     if not os.path.exists(TEMPLATE_PATH):
         print(f"Error: Template not found at {TEMPLATE_PATH}")
-        return False
+        print(f"Current Working Directory: {os.getcwd()}")
+        print(f"Files in assets: {os.listdir('assets') if os.path.exists('assets') else 'Assets folder not found'}")
+        return f"Template not found at {TEMPLATE_PATH}. CWD: {os.getcwd()}"
 
     try:
         img = Image.open(TEMPLATE_PATH)
@@ -34,7 +36,29 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         # Assuming layout based on typical EBD cards
         
         # 1. Lesson Number
-        font_lesson = ImageFont.truetype(FONT_PATH, 40)
+        # Font Loading Logic
+        try:
+            font_lesson = ImageFont.truetype("arial.ttf", 40)
+            font_theme = ImageFont.truetype("arial.ttf", 30)
+            font_hymns = ImageFont.truetype("arial.ttf", 40)
+            font_prof = ImageFont.truetype("arial.ttf", 120)
+            font_break = ImageFont.truetype("arial.ttf", 30)
+        except IOError:
+            try:
+                # Try DejaVuSans (Linux/Streamlit Cloud)
+                font_lesson = ImageFont.truetype("DejaVuSans.ttf", 40)
+                font_theme = ImageFont.truetype("DejaVuSans.ttf", 30)
+                font_hymns = ImageFont.truetype("DejaVuSans.ttf", 40)
+                font_prof = ImageFont.truetype("DejaVuSans.ttf", 120)
+                font_break = ImageFont.truetype("DejaVuSans.ttf", 30)
+            except IOError:
+                # Fallback to default (ugly but works)
+                print("Warning: Custom fonts not found. Using default.")
+                font_lesson = ImageFont.load_default()
+                font_theme = ImageFont.load_default()
+                font_hymns = ImageFont.load_default()
+                font_prof = ImageFont.load_default()
+                font_break = ImageFont.load_default()
         # Position: Let's assume top right or top center. 
         # User said: "numero da lição... tema... hinos... professor... café"
         # I will print "Lição X" 
@@ -108,7 +132,7 @@ def generate_card(lesson_data, professor_name, has_breakfast):
 
     except Exception as e:
         print(f"Error generating image: {e}")
-        return False
+        return str(e)
 
 if __name__ == "__main__":
     # Test data

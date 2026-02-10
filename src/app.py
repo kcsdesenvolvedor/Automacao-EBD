@@ -48,7 +48,7 @@ if 'lesson_data' in st.session_state:
         with st.spinner("Gerando imagem..."):
             success = generate_card(data, professor_name, has_breakfast)
             
-        if success:
+        if success is True:
             image_path = os.path.join("output", f"ebd_licao_{data['lesson_number']}.png")
             st.image(image_path, caption="Imagem Gerada", use_column_width=True)
             
@@ -61,4 +61,5 @@ if 'lesson_data' in st.session_state:
                     mime="image/png"
                 )
         else:
-            st.error("Erro ao gerar a imagem. Verifique o template.")
+            st.error(f"Erro ao gerar a imagem: {success}")
+
