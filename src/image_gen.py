@@ -33,8 +33,24 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         # Lesson Number (Top Right usually, or near title)
         # Assuming layout based on typical EBD cards
         
+        # --- FONT CONFIGURATION ---
+        try:
+            # Drastically increasing sizes based on user feedback
+            font_lesson = ImageFont.truetype(FONT_PATH, 60)   # Was 40
+            font_theme = ImageFont.truetype(FONT_PATH, 55)    # Was 30/35
+            font_hymns = ImageFont.truetype(FONT_PATH, 50)    # Was 40
+            font_prof = ImageFont.truetype(FONT_PATH, 160)    # Was 120
+            font_break = ImageFont.truetype(FONT_PATH, 50)    # Was 30/35
+        except Exception as e:
+            print(f"CRITICAL ERROR loading font {FONT_PATH}: {e}")
+            # Fallback to default if custom font fails entirely
+            font_lesson = ImageFont.load_default()
+            font_theme = ImageFont.load_default()
+            font_hymns = ImageFont.load_default()
+            font_prof = ImageFont.load_default()
+            font_break = ImageFont.load_default()
+
         # 1. Lesson Number
-        font_lesson = ImageFont.truetype(FONT_PATH, 40)
         # Position: Let's assume top right or top center. 
         # User said: "numero da lição... tema... hinos... professor... café"
         # I will print "Lição X" 
@@ -45,7 +61,6 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         draw.text((W - length_lesson - 40, 90), lesson_text, font=font_lesson, fill=TEXT_COLOR)
         
         # 2. Theme (Central, Big)
-        font_theme = ImageFont.truetype(FONT_PATH, 30)
         theme_text = lesson_data['theme']
         # Wrap text if too long
         lines = []
@@ -66,32 +81,23 @@ def generate_card(lesson_data, professor_name, has_breakfast):
             length = draw.textlength(line, font=font_theme)
             x_text = (W - length) / 2
             draw.text((x_text, y_text), line, font=font_theme, fill=TEXT_COLOR_BLUE)
-            y_text += 70 # Line height
+            y_text += 85 # Line height increased due to larger font
             
         # 3. Hymns (Below Theme)
-        y_hymns = y_text + 50
-        font_hymns = ImageFont.truetype(FONT_PATH, 40)
+        y_hymns = y_text + 60
         hymns_text = f"Hinos Sugeridos: {lesson_data['hymns']}"
         length_hymns = draw.textlength(hymns_text, font=font_hymns)
         draw.text(((W - length_hymns)/2, y_hymns), hymns_text, font=font_hymns, fill=TEXT_COLOR)
         
         # 4. Professor (Bottom)
         y_prof = H * 0.60
-        font_prof = ImageFont.truetype(FONT_PATH, 120)
         prof_text = f"{professor_name}"
         length_prof = draw.textlength(prof_text, font=font_prof)
         draw.text(((W - length_prof)/2, y_prof), prof_text, font=font_prof, fill=TEXT_COLOR)
         
         # 5. Breakfast (Bottom text)
-        if not has_breakfast: # If NOT Holy Supper (Santa Ceia) -> We have breakfast
-            # Wait, "caso não seja culto de santa ceia colocamos a informação de que teremos café"
-            # So if NOT Santa Ceia -> Print Breakfast
-            # User input "Holy Supper sunday?" (True/False). If True -> No Breakfast.
-            pass
-        
         if has_breakfast:
             y_break = H * 0.85
-            font_break = ImageFont.truetype(FONT_PATH, 30)
             break_text = "Café da manhã às 8:30h"
             length_break = draw.textlength(break_text, font=font_break)
             draw.text(((W - length_break)/2, y_break), break_text, font=font_break, fill=TEXT_COLOR)
