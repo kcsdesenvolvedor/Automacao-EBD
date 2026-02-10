@@ -44,21 +44,12 @@ def generate_card(lesson_data, professor_name, has_breakfast):
             font_prof = ImageFont.truetype("arial.ttf", 120)
             font_break = ImageFont.truetype("arial.ttf", 30)
         except IOError:
-            try:
-                # Try DejaVuSans (Linux/Streamlit Cloud)
-                font_lesson = ImageFont.truetype("DejaVuSans.ttf", 40)
-                font_theme = ImageFont.truetype("DejaVuSans.ttf", 30)
-                font_hymns = ImageFont.truetype("DejaVuSans.ttf", 40)
-                font_prof = ImageFont.truetype("DejaVuSans.ttf", 120)
-                font_break = ImageFont.truetype("DejaVuSans.ttf", 30)
-            except IOError:
-                # Fallback to default (ugly but works)
-                print("Warning: Custom fonts not found. Using default.")
-                font_lesson = ImageFont.load_default()
-                font_theme = ImageFont.load_default()
-                font_hymns = ImageFont.load_default()
-                font_prof = ImageFont.load_default()
-                font_break = ImageFont.load_default()
+            print("Warning: Arial font not found. Using default PIL font.")
+            font_lesson = ImageFont.load_default()
+            font_theme = ImageFont.load_default()
+            font_hymns = ImageFont.load_default()
+            font_prof = ImageFont.load_default()
+            font_break = ImageFont.load_default()
         # Position: Let's assume top right or top center. 
         # User said: "numero da lição... tema... hinos... professor... café"
         # I will print "Lição X" 
