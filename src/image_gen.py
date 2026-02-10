@@ -36,20 +36,13 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         # Assuming layout based on typical EBD cards
         
         # 1. Lesson Number
-        # Font Loading Logic
-        try:
-            font_lesson = ImageFont.truetype("arial.ttf", 40)
-            font_theme = ImageFont.truetype("arial.ttf", 30)
-            font_hymns = ImageFont.truetype("arial.ttf", 40)
-            font_prof = ImageFont.truetype("arial.ttf", 120)
-            font_break = ImageFont.truetype("arial.ttf", 30)
-        except IOError:
-            print("Warning: Arial font not found. Using default PIL font.")
-            font_lesson = ImageFont.load_default()
-            font_theme = ImageFont.load_default()
-            font_hymns = ImageFont.load_default()
-            font_prof = ImageFont.load_default()
-            font_break = ImageFont.load_default()
+        # DEBUG: Force default font to rule out path issues
+        print("DEBUG: Using default PIL font.")
+        font_lesson = ImageFont.load_default()
+        font_theme = ImageFont.load_default()
+        font_hymns = ImageFont.load_default()
+        font_prof = ImageFont.load_default()
+        font_break = ImageFont.load_default()
         # Position: Let's assume top right or top center. 
         # User said: "numero da lição... tema... hinos... professor... café"
         # I will print "Lição X" 
