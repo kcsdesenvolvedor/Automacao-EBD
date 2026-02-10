@@ -4,7 +4,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_PATH = os.path.join(BASE_DIR, "assets", "template.png")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
-FONT_PATH = os.path.join(BASE_DIR, "assets", "font.ttf")
+FONT_PATH = os.path.join(BASE_DIR, "assets", "Arial.ttf")
 
 def generate_card(lesson_data, professor_name, has_breakfast):
     """
@@ -35,11 +35,11 @@ def generate_card(lesson_data, professor_name, has_breakfast):
         print(f"DEBUG: Loading font from {FONT_PATH}")
         try:
             # Drastically increasing sizes based on user feedback
-            font_lesson = ImageFont.truetype(FONT_PATH, 60)
-            font_theme = ImageFont.truetype(FONT_PATH, 55)
-            font_hymns = ImageFont.truetype(FONT_PATH, 50)
+            font_lesson = ImageFont.truetype(FONT_PATH, 40)
+            font_theme = ImageFont.truetype(FONT_PATH, 30)
+            font_hymns = ImageFont.truetype(FONT_PATH, 40)
             font_prof = ImageFont.truetype(FONT_PATH, 160)
-            font_break = ImageFont.truetype(FONT_PATH, 50)
+            font_break = ImageFont.truetype(FONT_PATH, 30)
         except Exception as e:
             print(f"CRITICAL ERROR loading font {FONT_PATH}: {e}")
             print("Falling back to default font (will be small).")
@@ -75,10 +75,10 @@ def generate_card(lesson_data, professor_name, has_breakfast):
             length = draw.textlength(line, font=font_theme)
             x_text = (W - length) / 2
             draw.text((x_text, y_text), line, font=font_theme, fill=TEXT_COLOR_BLUE)
-            y_text += 85
+            y_text += 70
             
         # 3. Hymns (Below Theme)
-        y_hymns = y_text + 60
+        y_hymns = y_text + 50
         hymns_text = f"Hinos Sugeridos: {lesson_data['hymns']}"
         length_hymns = draw.textlength(hymns_text, font=font_hymns)
         draw.text(((W - length_hymns)/2, y_hymns), hymns_text, font=font_hymns, fill=TEXT_COLOR)
